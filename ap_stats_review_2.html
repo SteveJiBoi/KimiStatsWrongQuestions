@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kimi's AP Stats 错题本</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #faf9f6;
+    --bg2: #f2f0ea;
+    --bg3: #e9e6dc;
+    --card: #ffffff;
+    --ink: #1a1916;
+    --ink2: #5a574e;
+    --ink3: #8c8980;
+    --accent: #d04c2f;
+    --accent2: #e8763e;
+    --success: #2a7a4b;
+    --success-bg: #edf7f1;
+    --wrong-bg: #fdf0ed;
+    --wrong: #c0392b;
+    --tag-1: #3a5f8a; --tag-1b: #dceaf6;
+    --tag-2: #5a3a8a; --tag-2b: #ede0f6;
+    --tag-3: #3a8a5a; --tag-3b: #dff6ea;
+    --tag-4: #8a6a2a; --tag-4b: #f6edcc;
+    --tag-5: #8a3a4a; --tag-5b: #f6dde2;
+    --tag-6: #2a6a7a; --tag-6b: #d0eef4;
+    --tag-7: #6a5a2a; --tag-7b: #f0ead0;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+    --radius: 12px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  header {
+    background: var(--card);
+    border-bottom: 1px solid var(--bg3);
+    padding: 1.5rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem;
+    color: var(--ink);
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+  .logo span {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.75rem;
+    color: var(--ink3);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.45rem 1rem;
+    border-radius: 6px;
+    border: 1.5px solid transparent;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .btn-outline {
+    background: transparent;
+    border-color: var(--bg3);
+    color: var(--ink2);
+  }
+  .btn-outline:hover { border-color: var(--ink3); background: var(--bg2); }
+  .btn-accent {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+  .btn-accent:hover { background: #b8421f; }
+  .btn-success {
+    background: var(--success);
+    color: white;
+    border-color: var(--success);
+  }
+  .btn-success:hover { background: #1f6039; }
+
+  main { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+  }
+  .stat-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--bg3);
+    text-align: center;
+  }
+  .stat-card .num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+  .stat-card .lbl {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink3);
+  }
+
+  .filter-row {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+    align-items: center;
+  }
+  .filter-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--ink3);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-right: 0.25rem;
+  }
+  .filter-chip {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.35rem 0.85rem;
+    border-radius: 20px;
+    border: 1.5px solid var(--bg3);
+    background: transparent;
+    color: var(--ink2);
+    cursor: pointer;
+    transition: all 0.12s;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+  .filter-chip:hover { border-color: var(--ink3); }
+  .filter-chip.active {
+    background: var(--ink);
+    color: white;
+    border-color: var(--ink);
+  }
+
+  .year-section { margin-bottom: 2.5rem; }
+  .year-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+  }
+  .year-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.5rem;
+    color: var(--ink);
+  }
+  .year-badge {
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    background: var(--bg3);
+    color: var(--ink2);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .year-divider {
+    flex: 1;
+    height: 1px;
+    background: var(--bg3);
+  }
+
+  .q-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    border: 1px solid var(--bg3);
+    margin-bottom: 1rem;
+    overflow: hidden;
+    transition: box-shadow 0.15s;
+  }
+  .q-card:hover { box-shadow: var(--shadow); }
+
+  .q-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.1rem 1.25rem;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .q-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--ink3);
+    min-width: 24px;
+    padding-top: 0.1rem;
+  }
+
+  .q-meta { flex: 1; }
+  .q-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 0.4rem;
+  }
+  .q-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+
+  .tag {
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 0.2rem 0.55rem;
+    border-radius: 4px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .q-status { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+
+  .status-pill {
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    letter-spacing: 0.03em;
+  }
+  .status-wrong { background: var(--wrong-bg); color: var(--wrong); }
+  .status-unknown { background: #f0eeff; color: #5c3fa5; }
+
+  .ans-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 500;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  .ans-wrong-chose { background: var(--wrong-bg); color: var(--wrong); }
+  .ans-correct { background: var(--success-bg); color: var(--success); }
+
+  .reveal-btn {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.3rem 0.75rem;
+    border-radius: 6px;
+    border: 1.5px solid var(--bg3);
+    background: transparent;
+    color: var(--ink2);
+    cursor: pointer;
+    transition: all 0.12s;
+    white-space: nowrap;
+    margin-left: auto;
+  }
+  .reveal-btn:hover { background: var(--bg2); }
+  .reveal-btn.revealed { background: var(--bg2); border-color: var(--ink3); color: var(--ink); }
+
+  .q-body { display: none; }
+  .q-body.open { display: block; }
+
+  .q-divider { height: 1px; background: var(--bg3); }
+
+  .q-content { padding: 1.25rem; }
+
+  .section-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink3);
+    margin-bottom: 0.5rem;
+  }
+
+  .mistake-box {
+    background: var(--wrong-bg);
+    border-left: 3px solid var(--wrong);
+    border-radius: 0 6px 6px 0;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.88rem;
+    color: var(--ink);
+  }
+  .mistake-box.unknown {
+    background: #f0eeff;
+    border-left-color: #7c4fd4;
+  }
+
+  .answer-reveal { display: none; }
+  .answer-reveal.visible { display: block; }
+
+  .answer-box {
+    background: var(--success-bg);
+    border-left: 3px solid var(--success);
+    border-radius: 0 6px 6px 0;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.88rem;
+    color: var(--ink);
+  }
+
+  .rationale {
+    background: var(--bg);
+    border-radius: 8px;
+    padding: 1rem 1.1rem;
+    font-size: 0.88rem;
+    color: var(--ink);
+    line-height: 1.75;
+  }
+  .rationale h4 {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--ink2);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.6rem;
+  }
+  .step {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 0.6rem;
+    align-items: flex-start;
+  }
+  .step-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 500;
+    background: var(--bg3);
+    color: var(--ink2);
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+  .step-text { flex: 1; }
+
+  .key-concept {
+    display: inline-block;
+    background: var(--bg3);
+    color: var(--ink2);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-family: 'DM Mono', monospace;
+    margin: 0.1rem 0;
+  }
+
+  .hidden { display: none !important; }
+
+  .no-results {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--ink3);
+    font-size: 0.9rem;
+  }
+
+  .progress-bar-wrap {
+    background: var(--bg3);
+    border-radius: 20px;
+    height: 6px;
+    overflow: hidden;
+    margin: 0.5rem 0;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 20px;
+    transition: width 0.4s ease;
+  }
+  .progress-label {
+    font-size: 0.72rem;
+    color: var(--ink3);
+    font-weight: 600;
+  }
+
+  @media (max-width: 600px) {
+    header { padding: 1rem; }
+    main { padding: 1rem 0.75rem 3rem; }
+    .q-header { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    Kimi的AP Stats错题本
+    <span>Wrong Q Review</span>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-outline" onclick="collapseAll()">Collapse All</button>
+    <button class="btn btn-outline" onclick="expandAll()">Expand All</button>
+    <button class="btn btn-success" onclick="revealAll()" id="revealAllBtn">👁 Show All Answers</button>
+    <button class="btn btn-accent" onclick="hideAll()" id="hideAllBtn" style="display:none">🙈 Hide All Answers</button>
+  </div>
+</header>
+
+<main>
+  <div class="stats-bar">
+    <div class="stat-card">
+      <div class="num" id="totalCount">8</div>
+      <div class="lbl">Total Wrong</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" style="color:#5c3fa5" id="unknownCount">6</div>
+      <div class="lbl">Didn't Know</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" style="color:var(--wrong)" id="wrongCount">2</div>
+      <div class="lbl">Chose Wrong</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" id="yearCount">2</div>
+      <div class="lbl">Years</div>
+    </div>
+  </div>
+
+  <div class="filter-row">
+    <span class="filter-label">Year:</span>
+    <button class="filter-chip active" data-filter="year" data-val="all" onclick="setFilter('year','all',this)">All</button>
+    <button class="filter-chip" data-filter="year" data-val="2015" onclick="setFilter('year','2015',this)">2015</button>
+    <button class="filter-chip" data-filter="year" data-val="2016" onclick="setFilter('year','2016',this)">2016</button>
+  </div>
+  <div class="filter-row">
+    <span class="filter-label">Topic:</span>
+    <button class="filter-chip active" data-filter="topic" data-val="all" onclick="setFilter('topic','all',this)">All Topics</button>
+    <button class="filter-chip" data-filter="topic" data-val="probability" onclick="setFilter('topic','probability',this)">Probability</button>
+    <button class="filter-chip" data-filter="topic" data-val="inference" onclick="setFilter('topic','inference',this)">Inference</button>
+    <button class="filter-chip" data-filter="topic" data-val="regression" onclick="setFilter('topic','regression',this)">Regression</button>
+    <button class="filter-chip" data-filter="topic" data-val="sampling" onclick="setFilter('topic','sampling',this)">Sampling & Design</button>
+    <button class="filter-chip" data-filter="topic" data-val="distributions" onclick="setFilter('topic','distributions',this)">Distributions</button>
+    <button class="filter-chip" data-filter="topic" data-val="exploratory" onclick="setFilter('topic','exploratory',this)">Exploratory Data</button>
+  </div>
+
+  <div id="questions-container"></div>
+</main>
+
+<script>
+const QUESTIONS = [
+  {
+    id: "2015-25",
+    year: "2015",
+    num: 25,
+    title: "Combining Independent Random Variables",
+    topics: ["probability", "distributions"],
+    tagLabels: ["Probability", "Random Variables"],
+    tagColors: ["tag-1", "tag-2"],
+    status: "unknown",
+    myAnswer: null,
+    correct: "B",
+    question: "Two independent random variables X and Y have standard deviations σ_X and σ_Y. A new variable Z = aX + bY is formed. Which expression correctly gives the standard deviation of Z?",
+    mistakeNote: "I didn't know how to do this question.",
+    answerLabel: "B — σ_Z = √(a²σ_X² + b²σ_Y²)",
+    rationale: "When combining independent random variables, variances add (not standard deviations). For Z = aX + bY, the variance of Z is Var(Z) = a²Var(X) + b²Var(Y). The standard deviation is then the square root of the variance.",
+    steps: [
+      "Recall the rule: for independent random variables, <strong>Var(aX + bY) = a²Var(X) + b²Var(Y)</strong>. Variance is additive only when variables are independent.",
+      "Var(X) = σ_X² and Var(Y) = σ_Y², so Var(Z) = a²σ_X² + b²σ_Y².",
+      "Standard deviation is always the square root of variance: σ_Z = √(a²σ_X² + b²σ_Y²). This is answer B.",
+      "<strong>Common trap:</strong> Many students write σ_Z = aσ_X + bσ_Y — this is WRONG. You cannot simply add standard deviations. Always work with variances first, then take the square root."
+    ],
+    concept: "Var(aX + bY) = a²Var(X) + b²Var(Y) for independent X, Y"
+  },
+  {
+    id: "2015-31",
+    year: "2015",
+    num: 31,
+    title: "Interpreting a P-value",
+    topics: ["inference"],
+    tagLabels: ["Inference", "Hypothesis Testing"],
+    tagColors: ["tag-3", "tag-4"],
+    status: "unknown",
+    myAnswer: null,
+    correct: "D",
+    question: "A significance test produces a p-value of 0.03. Which of the following is the correct interpretation of this p-value?",
+    mistakeNote: "I didn't know how to do this question.",
+    answerLabel: "D — Assuming H₀ is true, there is a 3% probability of observing a test statistic as extreme as or more extreme than the one observed.",
+    rationale: "The p-value is NOT the probability that H₀ is true. It is the probability of obtaining a result at least as extreme as the observed result, assuming H₀ is true. This is one of the most commonly tested and misunderstood concepts in AP Stats.",
+    steps: [
+      "A p-value is always computed <strong>assuming H₀ is true</strong>. It measures how surprising the data would be in a world where the null hypothesis holds.",
+      "p = 0.03 means: if H₀ were true, there is only a 3% chance of getting a test statistic as extreme (or more extreme) as the one we observed.",
+      "<strong>Incorrect interpretations to avoid:</strong> 'The probability that H₀ is true is 3%' — WRONG. The p-value says nothing about the probability of H₀ being true. 'There is a 3% chance the result is due to chance' — WRONG (or at least imprecise).",
+      "If p < α (e.g., 0.03 < 0.05), we reject H₀, meaning the observed data is statistically unlikely under H₀."
+    ],
+    concept: "P-value = P(data as extreme or more | H₀ true)"
+  },
+  {
+    id: "2015-35",
+    year: "2015",
+    num: 35,
+    title: "Type I and Type II Error Relationship",
+    topics: ["inference"],
+    tagLabels: ["Inference", "Error Types"],
+    tagColors: ["tag-3", "tag-5"],
+    status: "unknown",
+    myAnswer: null,
+    correct: "A",
+    question: "Researchers set up a hypothesis test with α = 0.05. Keeping the sample size fixed, if α is decreased to 0.01, what happens to the probability of a Type II error?",
+    mistakeNote: "I didn't know how to do this question.",
+    answerLabel: "A — The probability of a Type II error increases.",
+    rationale: "Type I error (α) and Type II error (β) have an inverse relationship when sample size is held constant. Decreasing α makes it harder to reject H₀, which means more false nulls will fail to be rejected — increasing β.",
+    steps: [
+      "Type I error (α): Reject H₀ when H₀ is actually true (false positive). This is what we set with α.",
+      "Type II error (β): Fail to reject H₀ when H₀ is actually false (false negative).",
+      "When we decrease α from 0.05 to 0.01, we become <strong>more conservative</strong> — we require stronger evidence before rejecting H₀.",
+      "This stricter standard means some truly false null hypotheses will NOT be rejected — we 'miss' real effects more often. Therefore β increases.",
+      "<strong>Memory trick:</strong> Think of α and β as a see-saw with fixed sample size. Push one down, the other goes up. The only way to reduce both simultaneously is to increase sample size."
+    ],
+    concept: "↓α (fixed n) → ↑β (inverse relationship)"
+  },
+  {
+    id: "2015-40",
+    year: "2015",
+    num: 40,
+    title: "Confidence Interval for a Population Proportion",
+    topics: ["inference"],
+    tagLabels: ["Inference", "Confidence Intervals"],
+    tagColors: ["tag-3", "tag-6"],
+    status: "unknown",
+    myAnswer: null,
+    correct: "A",
+    question: "A 95% confidence interval for a population proportion p is computed to be (0.42, 0.58). Which of the following is a correct interpretation?",
+    mistakeNote: "I didn't know how to do this question.",
+    answerLabel: "A — We are 95% confident that the true population proportion p is between 0.42 and 0.58.",
+    rationale: "A confidence interval gives a range of plausible values for the unknown population parameter. The 95% confidence level means that if we repeated this process many times, about 95% of such intervals would capture the true parameter.",
+    steps: [
+      "The interval (0.42, 0.58) is constructed from sample data. The true proportion p is fixed but unknown.",
+      "<strong>Correct language:</strong> 'We are 95% confident that the true population proportion is between 0.42 and 0.58.'",
+      "<strong>Common wrong interpretations:</strong> 'There is a 95% probability that p is in this interval' — WRONG (p is fixed; it either is or isn't in the interval). 'If we repeat the study, 95% of results will fall in this interval' — WRONG (this refers to the data, not the parameter).",
+      "The 95% refers to the <strong>method</strong>: in the long run, 95% of all intervals constructed this way will contain the true p. Any single interval either does or doesn't contain p.",
+      "Use the phrasing: 'We are [confidence level] confident that [parameter] is between [lower bound] and [upper bound].'"
+    ],
+    concept: "C.I. captures true parameter with stated confidence in repeated sampling"
+  },
+  {
+    id: "2016-10",
+    year: "2016",
+    num: 10,
+    title: "Observational Study vs. Experiment — Causation",
+    topics: ["sampling"],
+    tagLabels: ["Sampling & Design", "Causation"],
+    tagColors: ["tag-7", "tag-1"],
+    status: "wrong",
+    myAnswer: "D",
+    correct: "E",
+    question: "A researcher finds that people who drink more coffee have lower rates of a certain disease. The researcher concludes that drinking coffee prevents this disease. Which of the following best explains why this conclusion may NOT be valid?",
+    mistakeNote: "I chose D, thinking it was about sample size. But the real issue is confounding — this is an observational study, not an experiment.",
+    answerLabel: "E — The study is observational; a confounding variable may explain the association.",
+    rationale: "In observational studies, we cannot establish causation because we do not control for all variables. The association between coffee and lower disease rates might be due to a confounding variable (a lurking variable associated with both coffee drinking and disease risk).",
+    steps: [
+      "<strong>Why D is wrong:</strong> Sample size is about precision, not causation. Even a large observational study cannot prove cause-and-effect.",
+      "In an <strong>observational study</strong>, participants are observed without the researcher assigning treatments. This means there may be systematic differences between groups.",
+      "A <strong>confounding variable</strong> is associated with both the explanatory variable (coffee) and the response variable (disease rate). For example: people who drink coffee might also be more active, younger, or have other dietary habits.",
+      "Only a <strong>randomized controlled experiment</strong> can establish causation, because random assignment balances confounding variables between treatment groups.",
+      "<strong>Key rule for AP Stats:</strong> Association ≠ Causation in observational data. Always check whether random assignment was used before accepting a causal claim."
+    ],
+    concept: "Observational study → association only; experiment with random assignment → causation"
+  },
+  {
+    id: "2016-18",
+    year: "2016",
+    num: 18,
+    title: "Binomial Probability Distribution",
+    topics: ["probability", "distributions"],
+    tagLabels: ["Probability", "Binomial"],
+    tagColors: ["tag-1", "tag-2"],
+    status: "unknown",
+    myAnswer: null,
+    correct: "C",
+    question: "A basketball player makes 70% of free throws. In a random sample of 10 free throws, what is the probability that she makes exactly 8?",
+    mistakeNote: "I didn't know how to do this question.",
+    answerLabel: "C — P(X=8) = C(10,8) × (0.7)⁸ × (0.3)² ≈ 0.2335",
+    rationale: "This is a binomial probability problem. The situation satisfies all four BINS conditions: fixed number of trials, independent trials, only two outcomes (make/miss), and same probability of success each trial.",
+    steps: [
+      "Check BINS conditions: B = Binary outcomes (make or miss), I = Independent trials, N = Fixed number of trials (n=10), S = Same probability of success (p=0.7). ✓ All satisfied.",
+      "Use the Binomial Probability Formula: <strong>P(X = k) = C(n,k) · pᵏ · (1−p)^(n−k)</strong>",
+      "Plug in: n = 10, k = 8, p = 0.7. → P(X=8) = C(10,8) × (0.7)⁸ × (0.3)²",
+      "C(10,8) = 10!/(8!·2!) = 45. (0.7)⁸ ≈ 0.05765. (0.3)² = 0.09",
+      "P(X=8) = 45 × 0.05765 × 0.09 ≈ 0.2335. On your calculator: binompdf(10, 0.7, 8)."
+    ],
+    concept: "Binomial: P(X=k) = C(n,k)·pᵏ·(1−p)^(n−k); calc: binompdf(n,p,k)"
+  },
+  {
+    id: "2016-24",
+    year: "2016",
+    num: 24,
+    title: "Residuals and Regression Line Fit",
+    topics: ["regression"],
+    tagLabels: ["Regression", "Residuals"],
+    tagColors: ["tag-4", "tag-5"],
+    status: "unknown",
+    myAnswer: null,
+    correct: "C",
+    question: "A residual plot for a linear regression shows a curved pattern (concave up). Which conclusion is most appropriate?",
+    mistakeNote: "I didn't know how to do this question.",
+    answerLabel: "C — A linear model is NOT appropriate; a curved pattern in the residual plot indicates non-linearity in the data.",
+    rationale: "Residual plots are diagnostic tools. A good fit (linear model is appropriate) shows residuals randomly scattered around zero with no pattern. Any systematic pattern — like a curve — indicates the model is missing something in the data's structure.",
+    steps: [
+      "A <strong>residual</strong> = observed y − predicted ŷ. It measures how far off the regression line is for each data point.",
+      "For a linear model to be appropriate, residuals should show <strong>no pattern</strong> when plotted against x (or ŷ) — just random scatter around the horizontal line at 0.",
+      "A <strong>curved pattern</strong> in the residual plot means the relationship is non-linear. The linear model is systematically under-predicting in some ranges and over-predicting in others.",
+      "<strong>What to do:</strong> Consider a transformation (e.g., log or square root of x or y) to linearize the data, then re-fit.",
+      "<strong>Quick checklist for residual plots:</strong> Random scatter = linear model is fine. Curve = try transformation. Fan shape (spreading) = try log transformation on y. Outliers = investigate those points."
+    ],
+    concept: "Curved residual plot → linear model inappropriate; try data transformation"
+  },
+  {
+    id: "2016-36",
+    year: "2016",
+    num: 36,
+    title: "Chi-Square Test for Independence",
+    topics: ["inference"],
+    tagLabels: ["Inference", "Chi-Square"],
+    tagColors: ["tag-3", "tag-6"],
+    status: "wrong",
+    myAnswer: "D",
+    correct: "E",
+    question: "In a chi-square test of independence between two categorical variables, a researcher finds χ² = 12.4 with 3 degrees of freedom. The p-value is approximately 0.006. At α = 0.05, what is the correct conclusion?",
+    mistakeNote: "I chose D — I confused the conclusion wording. The correct answer emphasizes rejecting H₀ because of strong evidence of association, not just saying 'they are related.'",
+    answerLabel: "E — Reject H₀. There is convincing statistical evidence of an association between the two variables in the population.",
+    rationale: "When the p-value is less than α, we reject H₀. In a chi-square test of independence, H₀ states the two variables are independent (no association). Rejecting it means we have evidence of an association. The conclusion must be stated in context and reference the population, not just the sample.",
+    steps: [
+      "H₀ for chi-square test of independence: The two categorical variables are <strong>independent</strong> (no association) in the population.",
+      "Hₐ: The two variables are <strong>not independent</strong> (there is an association) in the population.",
+      "Compare p-value to α: p ≈ 0.006 < α = 0.05. → <strong>Reject H₀</strong>.",
+      "<strong>Why D is wrong:</strong> Simply saying 'the variables are related in the sample' is not a valid conclusion — we already know about the sample. The test draws conclusions about the <strong>population</strong>.",
+      "Proper conclusion language: 'Since p < α, we reject H₀. There is convincing statistical evidence of an association between [Variable 1] and [Variable 2] in the population.'"
+    ],
+    concept: "Chi-sq test: reject H₀ (independence) when p < α → evidence of association in population"
+  }
+];
+
+let activeFilters = { year: 'all', topic: 'all' };
+let allRevealed = false;
+
+function getTagStyle(colorKey) {
+  const map = {
+    'tag-1': { bg: '#dceaf6', color: '#3a5f8a' },
+    'tag-2': { bg: '#ede0f6', color: '#5a3a8a' },
+    'tag-3': { bg: '#dff6ea', color: '#2a6a40' },
+    'tag-4': { bg: '#f6edcc', color: '#7a5a1a' },
+    'tag-5': { bg: '#f6dde2', color: '#8a3a4a' },
+    'tag-6': { bg: '#d0eef4', color: '#2a6a7a' },
+    'tag-7': { bg: '#f0ead0', color: '#6a5a2a' },
+  };
+  return map[colorKey] || map['tag-1'];
+}
+
+function renderQuestions() {
+  const container = document.getElementById('questions-container');
+  const filtered = QUESTIONS.filter(q => {
+    if (activeFilters.year !== 'all' && q.year !== activeFilters.year) return false;
+    if (activeFilters.topic !== 'all' && !q.topics.includes(activeFilters.topic)) return false;
+    return true;
+  });
+
+  if (filtered.length === 0) {
+    container.innerHTML = '<div class="no-results">No questions match the selected filters.</div>';
+    updateStats(filtered);
+    return;
+  }
+
+  const byYear = {};
+  filtered.forEach(q => {
+    if (!byYear[q.year]) byYear[q.year] = [];
+    byYear[q.year].push(q);
+  });
+
+  container.innerHTML = Object.keys(byYear).sort().map(year => {
+    const qs = byYear[year];
+    return `
+      <div class="year-section" data-year="${year}">
+        <div class="year-header">
+          <div class="year-title">${year}</div>
+          <div class="year-badge">${qs.length} question${qs.length > 1 ? 's' : ''}</div>
+          <div class="year-divider"></div>
+        </div>
+        ${qs.map(q => renderCard(q)).join('')}
+      </div>
+    `;
+  }).join('');
+
+  updateStats(filtered);
+  if (allRevealed) {
+    document.querySelectorAll('.answer-reveal').forEach(el => el.classList.add('visible'));
+    document.querySelectorAll('.reveal-btn').forEach(el => { el.textContent = 'Hide Answer'; el.classList.add('revealed'); });
+  }
+}
+
+function renderCard(q) {
+  const tagsHtml = q.tagLabels.map((label, i) => {
+    const s = getTagStyle(q.tagColors[i]);
+    return `<span class="tag" style="background:${s.bg};color:${s.color}">${label}</span>`;
+  }).join('');
+
+  const statusHtml = q.status === 'wrong'
+    ? `<span class="status-pill status-wrong">✕ Chose Wrong</span><span class="ans-badge ans-wrong-chose">My answer: ${q.myAnswer}</span>`
+    : `<span class="status-pill status-unknown">? Didn't Know</span>`;
+
+  const stepsHtml = q.steps.map((s, i) => `
+    <div class="step">
+      <div class="step-num">${i+1}</div>
+      <div class="step-text">${s}</div>
+    </div>
+  `).join('');
+
+  const mistakeClass = q.status === 'unknown' ? 'mistake-box unknown' : 'mistake-box';
+  const mistakeIcon = q.status === 'unknown' ? '?' : '✕';
+
+  return `
+    <div class="q-card" id="card-${q.id}" data-year="${q.year}" data-topics="${q.topics.join(',')}">
+      <div class="q-header" onclick="toggleCard('${q.id}')">
+        <div class="q-num">Q${q.num}</div>
+        <div class="q-meta">
+          <div class="q-title">${q.title}</div>
+          <div class="q-tags">${tagsHtml}</div>
+        </div>
+        <div class="q-status">
+          ${statusHtml}
+          <span class="ans-badge ans-correct">✓ ${q.correct}</span>
+          <button class="reveal-btn" id="rev-${q.id}" onclick="event.stopPropagation(); toggleReveal('${q.id}')">Show Answer</button>
+        </div>
+      </div>
+
+      <div class="q-body" id="body-${q.id}">
+        <div class="q-divider"></div>
+        <div class="q-content">
+          <div class="section-label">What Went Wrong</div>
+          <div class="${mistakeClass}">
+            <strong>${mistakeIcon} ${q.status === 'unknown' ? "I don't know how to do this." : "Mistake:"}</strong> ${q.mistakeNote}
+          </div>
+
+          <div class="answer-reveal" id="ans-${q.id}">
+            <div class="section-label">Correct Answer</div>
+            <div class="answer-box">
+              <strong>✓ ${q.correct}:</strong> ${q.answerLabel}
+            </div>
+
+            <div class="section-label">Rationale & Step-by-Step Solution</div>
+            <div class="rationale">
+              <p style="margin-bottom:0.85rem">${q.rationale}</p>
+              <h4>Step-by-step</h4>
+              ${stepsHtml}
+              <div style="margin-top:0.85rem;padding-top:0.75rem;border-top:1px solid var(--bg3)">
+                <span style="font-size:0.72rem;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:0.08em;margin-right:0.4rem">Key Concept:</span>
+                <span class="key-concept">${q.concept}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function toggleCard(id) {
+  const body = document.getElementById('body-' + id);
+  body.classList.toggle('open');
+}
+
+function toggleReveal(id) {
+  const ans = document.getElementById('ans-' + id);
+  const btn = document.getElementById('rev-' + id);
+  const isVisible = ans.classList.contains('visible');
+
+  if (isVisible) {
+    ans.classList.remove('visible');
+    btn.textContent = 'Show Answer';
+    btn.classList.remove('revealed');
+  } else {
+    const body = document.getElementById('body-' + id);
+    body.classList.add('open');
+    ans.classList.add('visible');
+    btn.textContent = 'Hide Answer';
+    btn.classList.add('revealed');
+  }
+}
+
+function revealAll() {
+  allRevealed = true;
+  document.querySelectorAll('.q-body').forEach(el => el.classList.add('open'));
+  document.querySelectorAll('.answer-reveal').forEach(el => el.classList.add('visible'));
+  document.querySelectorAll('.reveal-btn').forEach(el => { el.textContent = 'Hide Answer'; el.classList.add('revealed'); });
+  document.getElementById('revealAllBtn').style.display = 'none';
+  document.getElementById('hideAllBtn').style.display = '';
+}
+
+function hideAll() {
+  allRevealed = false;
+  document.querySelectorAll('.answer-reveal').forEach(el => el.classList.remove('visible'));
+  document.querySelectorAll('.reveal-btn').forEach(el => { el.textContent = 'Show Answer'; el.classList.remove('revealed'); });
+  document.getElementById('revealAllBtn').style.display = '';
+  document.getElementById('hideAllBtn').style.display = 'none';
+}
+
+function expandAll() {
+  document.querySelectorAll('.q-body').forEach(el => el.classList.add('open'));
+}
+
+function collapseAll() {
+  document.querySelectorAll('.q-body').forEach(el => el.classList.remove('open'));
+}
+
+function setFilter(type, val, btn) {
+  activeFilters[type] = val;
+  document.querySelectorAll(`[data-filter="${type}"]`).forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderQuestions();
+}
+
+function updateStats(filtered) {
+  const unknown = filtered.filter(q => q.status === 'unknown').length;
+  const wrong = filtered.filter(q => q.status === 'wrong').length;
+  const years = new Set(filtered.map(q => q.year)).size;
+  document.getElementById('totalCount').textContent = filtered.length;
+  document.getElementById('unknownCount').textContent = unknown;
+  document.getElementById('wrongCount').textContent = wrong;
+  document.getElementById('yearCount').textContent = years;
+}
+
+renderQuestions();
+</script>
+</body>
+</html>
